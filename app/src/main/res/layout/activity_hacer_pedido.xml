@@ -15,6 +15,7 @@
         android:textColor="#000000"
         android:textSize="40sp"
         android:fontFamily="@font/niconne"
+        android:layout_gravity="center"
         android:textStyle="bold"
         />
 

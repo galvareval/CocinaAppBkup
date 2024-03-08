@@ -160,7 +160,7 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                                 detalleNuevo.setStockOriginal("agregado"); // Para luego modificar el stock del que parte el poder modificar
                                 detallesAgregados.add(detalleNuevo);
                                 double precioAnt = pedido.getPrecio_total();
-                                pedido.setPrecio_total(precioAnt + detalleNuevo.getPrecio());
+                                pedido.setPrecio_total(precioAnt + (detalleNuevo.getPrecio()  * detalleNuevo.getCantidad()));
                                 Log.d("detallesNuevos", "Precio total nuevo." + pedido.getPrecio_total());
                                 totalDetalleTextMod.setText(String.valueOf(pedido.getPrecio_total()) + "\u20AC");
                             }

@@ -2,8 +2,10 @@ package vidal.juan.cocinapp;
 
 public class EncapsuladorEntradas {
 
-    private int imagen;
+    private String urlImagen;
     private String titulo;
+
+    private String descripcion;
     private String precio;
     private int cantidadActual;
 
@@ -12,12 +14,21 @@ public class EncapsuladorEntradas {
     private int stock;
 
 
-    public EncapsuladorEntradas(int idImagen, String tituloEntrada, String precioEntrada, int cantidadMaxima, int stock) {
-        this.imagen = idImagen;
+    public EncapsuladorEntradas(String urlImagen, String tituloEntrada, String descripcion, String precioEntrada, int cantidadMaxima, int stock) {
+        this.urlImagen = urlImagen;
         this.titulo = tituloEntrada;
+        this.descripcion = descripcion;
         this.precio = precioEntrada;
         this.cantidadMaxima = cantidadMaxima;
         this.stock = stock;
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
 
     public String get_textoTitulo() {
@@ -26,10 +37,6 @@ public class EncapsuladorEntradas {
 
     public String get_Precio() {
         return precio;
-    }
-
-    public int get_idImagen() {
-        return imagen;
     }
 
     public int getCantidadActual() {
@@ -54,5 +61,13 @@ public class EncapsuladorEntradas {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

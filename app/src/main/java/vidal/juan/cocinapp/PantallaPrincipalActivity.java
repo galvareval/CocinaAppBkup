@@ -110,4 +110,5 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         startActivity(editarRegistroIntent);
 
     }
+
 }
