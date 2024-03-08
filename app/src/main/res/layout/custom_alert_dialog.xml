@@ -1,0 +1,46 @@
+<!-- res/layout/custom_alert_dialog.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <!-- Logo -->
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="61dp"
+        android:layout_gravity="left"
+        android:src="@drawable/cocin_app_logo" />
+
+    <!-- Espacio entre el logo y el mensaje de error -->
+    <Space
+        android:layout_width="16dp"
+        android:layout_height="1dp" />
+
+    <!-- Contenedor para el mensaje de error y el botón OK -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Mensaje de error -->
+        <TextView
+            android:id="@+id/errorMessageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:maxLines="5"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+        <!-- Botón de OK -->
+        <Button
+            android:id="@+id/okButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="OK" />
+    </LinearLayout>
+</LinearLayout>

@@ -22,15 +22,15 @@ public class MainActivity extends AppCompatActivity {
     //Para hacer la autentificación
     private FirebaseAuth mAuth;
     //Items del xml
-     Button loginButton;
-     EditText usuarioEditText,contrasenaEditText;
-     TextView olvidoContrasenaTextView, registroTextView;
+    Button loginButton;
+    EditText usuarioEditText,contrasenaEditText;
+    TextView olvidoContrasenaTextView, registroTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //TODO hacer splash screen??¿?¿?
-        //Si el usuario ya esta logeado, pasar a la pantalla princiapl; TODO no se si funciona sin el splash
+        //Si el usuario ya esta logeado, pasar a la pantalla princiapl;
         //Obtener el usuario logeado
         FirebaseUser usuarioLogeado = FirebaseAuth.getInstance().getCurrentUser();
         if (usuarioLogeado != null){
@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(usuarioYaLogeadoInt);
             finish();
         }
+        //Obtener instancia de FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
 
         //Referenciar los items del xml
         loginButton = findViewById(R.id.loginButton);
@@ -45,16 +47,18 @@ public class MainActivity extends AppCompatActivity {
         olvidoContrasenaTextView = findViewById(R.id.olvidoContrasenaTextView);
         usuarioEditText = findViewById(R.id.usuarioEditText);
         contrasenaEditText = findViewById(R.id.contrasenaEditText);
+
         //REGISTRO
         //Listener del nuevo registro
         registroTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PantallaPrincipalActivity.class);
+                Intent intent = new Intent(MainActivity.this, RegistroActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
+
         //OLVIDO DE CONTRASEÑA
         //Listener de olvido contraseña
         olvidoContrasenaTextView.setOnClickListener(new View.OnClickListener() {
@@ -65,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         //LOGIN
-        mAuth = FirebaseAuth.getInstance();
         //Listener del boton login
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,60 +79,60 @@ public class MainActivity extends AppCompatActivity {
                 validar();
             }
         });
-
-
-
     }
+
     /**
-     * Validar que el usuario introducido sea un correo electrónico y que la conraseña no este vacia
+     * Validar que el usuario introducido sea un correo electrónico y que la contraseña no esté vacía
      */
-    public void validar()
-    {
+    public void validar() {
         String correo = usuarioEditText.getText().toString().trim();
         String psw = contrasenaEditText.getText().toString().trim();
+
         //Comprobar el correo
-        if (correo.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(correo).matches())
-        {
-            usuarioEditText.setError("Dirección de correo invalida");
+        if (correo.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            usuarioEditText.setError("Dirección de correo inválida");
             return;
-        }else
-        {//quitar el error
+        } else {
+            //quitar el error
             usuarioEditText.setError(null);
         }
-        //Comprobar la contraseña
-        if (psw.isEmpty() )  {//TODO validar tambien el patron de la psw definir el patron de la psw
 
+        //Comprobar la contraseña
+        if (psw.isEmpty()) {
             contrasenaEditText.setError("Introduce la contraseña");
             return;
-        }
-        else
-        {
+        } else {
             contrasenaEditText.setError(null);
         }
-        iniciarSesion(correo,psw);
 
+        iniciarSesion(correo, psw);
     }
 
     /**
-     * Metodo para iniciar sesión una vez validados los campos de email y psw
-     * @param correo Correo del usuario que intenta inciar sesión
-     * @param psw Contraseña del usuario que intenta inciar sesión
+     * Metodo para iniciar sesión una vez validados los campos de email y contraseña
+     * @param correo Correo del usuario que intenta iniciar sesión
+     * @param psw Contraseña del usuario que intenta iniciar sesión
      */
-    public void iniciarSesion(String correo, String psw)
-    {
-        //Autentificiación mediante firebase con el email y psw proporciado
-        mAuth.signInWithEmailAndPassword(correo,psw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+    public void iniciarSesion(String correo, String psw) {
+        //Autentificación mediante firebase con el email y contraseña proporcionados
+        mAuth.signInWithEmailAndPassword(correo, psw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                //Si la autentificacion es correcta pasar a la pantalla principal
-                if (task.isSuccessful()){
-                    Intent logOkInt = new Intent(MainActivity.this, PantallaPrincipalActivity.class);
-                    startActivity(logOkInt);
-                    finish();
-                }
-                //En caso de autentificación erronea, notificarlo
-                else {
-                    Toast.makeText(MainActivity.this,"Autentificación incorrecta", Toast.LENGTH_LONG).show();
+                //Si la autentificación es correcta, verificar si el correo ha sido validado
+                if (task.isSuccessful()) {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null && user.isEmailVerified()) {
+                        //Si el correo ha sido validado, pasar a la pantalla principal
+                        Intent logOkInt = new Intent(MainActivity.this, PantallaPrincipalActivity.class);
+                        startActivity(logOkInt);
+                        finish();
+                    } else {
+                        //Si el correo no ha sido validado, mostrar un mensaje al usuario
+                        Toast.makeText(MainActivity.this, "Por favor, verifique su correo electrónico.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    //En caso de autentificación fallida, notificarlo
+                    Toast.makeText(MainActivity.this, "Autentificación incorrecta", Toast.LENGTH_LONG).show();
                 }
             }
         });

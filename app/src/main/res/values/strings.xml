@@ -8,8 +8,10 @@
     <string name="cerrar_sesion">cerrar sesion</string>
     <string name="contrasena">Contraseña</string>
     <string name="correo_electronico">Correo electrónico</string>
+    <string name="correo_no_confirmado">Por favor, confirme su correo electrónico para poder usar la app.</string>
     <string name="departamento">Departamento</string>
     <string name="derechos_reservados">© 2023 CocinApp. Todos los derechos reservados.</string>
+    <string name="descripcion_entrada">Descripción</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="login">ENTRAR</string>
@@ -17,7 +19,6 @@
     <string name="modificar_registro">Modificar registro</string>
     <string name="modificar_resitro_string">Modificar usuario</string>
     <string name="nombre">Nombre</string>
-    <string name="nombre_y_apellidos">Nombre y Apellidos</string>
     <string name="nuevo_pedido">Nuevo pedido</string>
     <string name="precio_entrada">Precio Ración</string>
     <string name="prompt_email">Email</string>

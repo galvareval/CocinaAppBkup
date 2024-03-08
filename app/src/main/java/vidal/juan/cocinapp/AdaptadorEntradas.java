@@ -12,7 +12,7 @@ public abstract class AdaptadorEntradas extends BaseAdapter {
 
     private ArrayList<EncapsuladorEntradas> entradas;
     private int R_layout_IdView;
-    private Context contexto;
+    protected Context contexto;
 
     public AdaptadorEntradas(Context contexto, int R_Layout_IdView, ArrayList<EncapsuladorEntradas> entradas) {
         super();

@@ -90,7 +90,7 @@ public class HacerPedidoActivity extends AppCompatActivity {
             }
         });
         //Mostrar el total del pedido; obtenido de la activdad anterior
-        total.setText("Total: " + String.valueOf(precioTotal));//Todo formatear mejor esto, redondearlo
+        total.setText("Total: " + String.valueOf(precioTotal) + "\u20AC");//Todo formatear mejor esto, redondearlo
 
         //Evento Botón Seleccionar fecha de entrga
         seleccionarFechaEntregaButton.setOnClickListener(new View.OnClickListener() {
