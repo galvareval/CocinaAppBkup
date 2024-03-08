@@ -10,8 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:textStyle="bold"
+
         android:background="@color/principal"
+        android:textColor="@color/white"
         android:padding="8dp" />
     <TableLayout
         android:layout_width="match_parent"
@@ -28,6 +29,7 @@
                 android:layout_width="64dp"
                 android:layout_height="wrap_content"
                 android:gravity="right"
+                android:textColor="@color/black"
                 android:padding="8dp" />
 
             <TextView
@@ -35,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
+                android:textColor="@color/black"
                 android:padding="8dp" />
 
             <TextView
@@ -42,6 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
+                android:textColor="@color/black"
                 android:padding="8dp" />
 
             <TextView
@@ -49,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
+                android:textColor="@color/black"
                 android:padding="8dp" />
         </TableRow>
     </TableLayout>
@@ -57,7 +62,8 @@
         android:layout_width="match_parent"
         android:background="@color/defPedidoColor"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="left"
+        android:textColor="@color/black"
         android:padding="8dp" />
 
 </LinearLayout>

@@ -52,8 +52,18 @@
     <string name="fecha_pedido">Fecha Pedido</string>
     <string name="fecha_entrega">Fecha Entrega</string>
     <string name="estado">Estado</string>
-    <string name="precio">Precio</string>
-    <string name="comentarios">"Comentarios: "</string>
+    <string name="precio">Precio  </string>
+    <string name="comentarios">"Comentarios"</string>
     <string name="detallesDelPedido">Detalles del pedido</string>
     <string name="volver">Volver</string>
+    <string name="idPedidoString">ID pedido: </string>
+    <string name="eliminar">Eliminar pedido</string>
+    <string name="modPedido">Modificar pedido</string>
+    <string name="noModPedidoMensaje">Lo sentimos, ya no es posible modificar el pedido</string>
+    <string name="modPedidoMensaje">Estas a tiempo de modificar el pedido</string>
+    <string name="modificar_pedido">Modificar pedido</string>
+    <string name="NuevafechaEntrega">Nueva fecha de entrega</string>
+    <string name="addRacion">Añadir ración</string>
+    <string name="addAlPedido">Agregar al pedido</string>
+
 </resources>

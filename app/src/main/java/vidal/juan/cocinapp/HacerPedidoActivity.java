@@ -48,6 +48,7 @@ public class HacerPedidoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hacer_pedido);
+        Log.d("ActivityLifecycle", "onCreate() HacerPedido");
         //referencia a items xml
         cancelNuevopedidoButton = findViewById(R.id.cancelNuevopedidoButton);
         seleccionarFechaEntregaButton = findViewById(R.id.seleccionarFechaEntregaButton);
@@ -120,6 +121,11 @@ public class HacerPedidoActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("ActivityLifecycle", "onDestroy() HacerPedido");
+    }
 
     /**
      * Metodo para obener la fecha seleccionada en el datepicker; Tiene restricion mediante la CONSTANTE a paritr dias recoge
@@ -134,26 +140,35 @@ public class HacerPedidoActivity extends AppCompatActivity {
         final int dia = calendar.get(Calendar.DAY_OF_MONTH);
         //Formatear la fecha a dia de hoy para pasarla al insert
         fechaPedido = formatoHoraMinSeg.format(calendar.getTime());
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this , new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this ,R.style.DatePickerTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 //Setear calendar con la fecha seleccionada
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-
-
-                String fechaFormateada = formato.format(calendar.getTime());
-                //Que hacer cuando se seleccione la fecha
-                Toast.makeText(HacerPedidoActivity.this,"Fecha de entrega: " + fechaFormateada, Toast.LENGTH_LONG).show();
-                fechaEntrega = fechaFormateada;
-                Log.d("FechaSel", "FechaSel: " + fechaEntrega);
-                Log.d("FechaPedido", "FechaPedido: " + fechaPedido);
-                fechaEntregaConfirm.setText(fechaEntrega);
-                confirmarPedidoButton.setVisibility(View.VISIBLE);
+                // Validar si la fecha seleccionada es igual al día de hoy
+                Calendar fechaSeleccionada = Calendar.getInstance();
+                fechaSeleccionada.set(year, month, day);
+                //Que la fecha seleccionada no sea el dia de hoy
+                if (fechaSeleccionada.get(Calendar.YEAR) == ano &&
+                        fechaSeleccionada.get(Calendar.MONTH) == mes &&
+                        fechaSeleccionada.get(Calendar.DAY_OF_MONTH) == dia) {
+                    Toast.makeText(HacerPedidoActivity.this, "Seleccione una fecha diferente al día de hoy", Toast.LENGTH_SHORT).show();
+                }else {
+                    String fechaFormateada = formato.format(calendar.getTime());
+                    //Que hacer cuando se seleccione la fecha
+                    Toast.makeText(HacerPedidoActivity.this, "Fecha de entrega: " + fechaFormateada, Toast.LENGTH_LONG).show();
+                    fechaEntrega = fechaFormateada;
+                    Log.d("FechaSel", "FechaSel: " + fechaEntrega);
+                    Log.d("FechaPedido", "FechaPedido: " + fechaPedido);
+                    fechaEntregaConfirm.setText(fechaEntrega);
+                    confirmarPedidoButton.setVisibility(View.VISIBLE);
+                }
             }
         }, ano, mes, dia);
-
+        // Restricción para que no se pueda seleccionar el día de hoy
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         //Restriccion de fines de semana
         datePickerDialog.getDatePicker().init(ano, mes, dia, new DatePicker.OnDateChangedListener() {
             @Override
@@ -189,8 +204,8 @@ public class HacerPedidoActivity extends AppCompatActivity {
      * Para volver a la ventana principal
      */
     private  void volverPprincipal() {
-        Intent intent = new Intent(HacerPedidoActivity.this, PantallaPrincipalActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(HacerPedidoActivity.this, PantallaPrincipalActivity.class);
+        startActivity(intent);*/
         finish();
     }
 

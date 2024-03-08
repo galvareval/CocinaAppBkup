@@ -13,6 +13,12 @@
         android:theme="@style/Theme.CocinApp"
         tools:targetApi="31">
         <activity
+            android:name=".AgregarRacionesPedido"
+            android:exported="false" />
+        <activity
+            android:name=".ModificarPedidoActivity"
+            android:exported="false" />
+        <activity
             android:name=".VerPedidoActivity"
             android:exported="false" />
         <activity
@@ -38,13 +44,13 @@
         </activity>
         <activity
             android:name=".RegistroActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ReestablecerPswActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".EditarRegistroActivity"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>

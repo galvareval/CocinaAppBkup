@@ -1,6 +1,7 @@
 package vidal.juan.cocinapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,20 @@ public abstract class AdaptadorPedidosActivos extends BaseAdapter {
     private int R_layout_IdView;
     private Context contexto;
 
-    public AdaptadorPedidosActivos(Context contexto, int R_Layout_IdView, ArrayList<Pedido> pedidosActivos) {
+    public AdaptadorPedidosActivos(Context contexto, int R_Layout_IdView) {
         super();
         this.contexto = contexto;
-        this.pedidosActivos = pedidosActivos;
         this.R_layout_IdView = R_Layout_IdView;
+        this.pedidosActivos = new ArrayList<>();
+    }
+    public void actualizarLista(ArrayList<Pedido> nuevaLista) {
+        pedidosActivos.clear();
+        pedidosActivos.addAll(nuevaLista);
+        notifyDataSetChanged();
+    }
+    public void setPedidosActivos(ArrayList<Pedido> pedidosActivos) {
+        this.pedidosActivos = pedidosActivos;
+        notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
     }
 
     public abstract void onEntrada(Pedido pedidoActivo, View view);
@@ -47,7 +57,9 @@ public abstract class AdaptadorPedidosActivos extends BaseAdapter {
         }
 
         onEntrada(pedidosActivos.get(position), convertView);
-
+        // Agregar registro al logcat para mostrar el pedido cada vez que se infle un elemento
+        Pedido pedido = pedidosActivos.get(position);
+        Log.d("PedidoInflado", "Pedido inflado: " + pedido.toString());
         return convertView;
     }
 }

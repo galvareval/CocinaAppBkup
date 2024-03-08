@@ -31,7 +31,7 @@
         android:background="@drawable/fondo"
         android:descendantFocusability="beforeDescendants"
         android:divider="@android:color/black"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="0dp" />
 
     <TextView
         android:id="@+id/total"
@@ -40,7 +40,8 @@
         android:layout_marginLeft="10dp"
         android:text="@string/total"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textColor="@color/black"
+        />
     <EditText
         android:id="@+id/comentariosTextMultiLine2"
         android:layout_width="match_parent"
@@ -51,6 +52,8 @@
         android:ems="10"
         android:gravity="start|top"
         android:background="@android:color/white"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hintColor"
         android:inputType="textMultiLine" />
 
     <LinearLayout
@@ -64,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="@string/fechaEntrega"
+            android:textColor="@color/white"
             android:layout_weight="1"/>
         <TextView
             android:id="@+id/fechaEntregaConfirm"
@@ -73,7 +77,8 @@
             android:layout_weight="1"
             android:text=""
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"
+             />
     </LinearLayout>
 
 
@@ -92,6 +97,7 @@
             android:layout_height="wrap_content"
             android:text="@string/confirmarPedido"
             android:visibility="gone"
+            android:textColor="@color/white"
             />
 
         <Button
@@ -101,7 +107,7 @@
             android:layout_below="@id/confirmarPedidoButton"
             android:layout_marginTop="10dp"
             android:text="@string/cancelar"
-
+            android:textColor="@color/white"
             />
     </LinearLayout>
 

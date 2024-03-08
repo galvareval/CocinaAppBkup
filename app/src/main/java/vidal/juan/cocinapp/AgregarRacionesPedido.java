@@ -25,10 +25,10 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class SeleccionarRacionesActivity extends AppCompatActivity {
+public class AgregarRacionesPedido extends AppCompatActivity {
 
     private ListView lista;
-    private Button botonPedir,cancelarButton;
+    private Button addRacionButton,cancelarButton;
     private ArrayList<EncapsuladorEntradas> datos;
     private boolean datosCargados = false;
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://cocinaapp-7da53-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -41,7 +41,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
         Log.d("ActivityLifecycle", "onCreate() SeleccionarRaciones");
         // Referencias a los elementos en activity_realizar_pedido.xml
         lista = findViewById(R.id.lista);
-        botonPedir = findViewById(R.id.botonPedir);
+        addRacionButton = findViewById(R.id.botonPedir);
         cancelarButton = findViewById(R.id.cancelarButton);
         datos = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
         cargarDatosFirebase();
 
         // Configurar listener para el botón Pedir
-        botonPedir.setOnClickListener(new View.OnClickListener() {
+        addRacionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Obtener la cantidad total y el precio total
@@ -59,19 +59,11 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
                 ArrayList<DetallePedido> detallesSeleccionados = obtenerDetallesSeleccionados();
                 //Comprobar que se seleeciona algo para pasar a la siguiente activity
                 if (!detallesSeleccionados.isEmpty()) {
-/*
-                    //Prueba mostrar en el log lo que se ha seleccionado
-                    for (DetallePedido detalle : detallesSeleccionados) {
-                        Log.d("DetallesSeleccionados", "Nombre: " + detalle.getNombreRacion() +
-                                ", Cantidad: " + detalle.getCantidad() +
-                                ", Precio : " + detalle.getPrecio() + "precio total: " + precioTotal);
-                    }*/
-                    // Iniciar la actividad para escoger fecha; hay que pasar el arraylist
-                    //Pasar arraylist  detallesSeleccionados + preciototal a siguiente activity
-                    Intent intent = new Intent(SeleccionarRacionesActivity.this, HacerPedidoActivity.class);
+                    //Devolver detales seleccionados a actividad anteriror
+                    Intent intent = new Intent();
                     intent.putParcelableArrayListExtra("detallesSeleccionados", detallesSeleccionados);
                     intent.putExtra("precioTotal", precioTotal);
-                    startActivity(intent);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
 
@@ -86,7 +78,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
         });
 
         // Ocultar el botón Pedir inicialmente
-        botonPedir.setVisibility(View.GONE);
+        addRacionButton.setVisibility(View.GONE);
     }
     @Override
     protected void onDestroy() {
@@ -125,7 +117,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
                     }
 
                     // Inicializa tu adaptador después de que se hayan cargado los datos
-                    lista.setAdapter(new AdaptadorEntradas(SeleccionarRacionesActivity.this, R.layout.entrada, datos) {
+                    lista.setAdapter(new AdaptadorEntradas(AgregarRacionesPedido.this, R.layout.entrada, datos) {
                         @Override
                         public void onEntrada(EncapsuladorEntradas entrada, View view) {
                             if (entrada != null) {
@@ -142,7 +134,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
                                         incrementarCantidad(entrada, textoCantidad);
-                                        actualizarBotonPedir();
+                                        actualizarBotonAdd();
                                     }
                                 });
 
@@ -150,7 +142,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
                                         decrementarCantidad(entrada, textoCantidad);
-                                        actualizarBotonPedir();
+                                        actualizarBotonAdd();
                                     }
                                 });
 
@@ -165,7 +157,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
                     // Realiza otras operaciones después de que se hayan cargado los datos
                     datosCargados = true;
                     // Actualiza el estado del botónPedir después de cargar los datos
-                    actualizarBotonPedir();
+                    actualizarBotonAdd();
                 } else {
                     // Manejar el caso en el que el nodo no existe
                     datosCargados = false;
@@ -215,7 +207,7 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
         textoCantidad.setText(String.valueOf(entrada.getCantidadActual()));
     }
 
-    private void actualizarBotonPedir() {
+    private void actualizarBotonAdd() {
         // Verificar si hay al menos un producto con cantidad mayor que 0
         boolean mostrarBoton = false;
         for (EncapsuladorEntradas entrada : datos) {
@@ -226,8 +218,8 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
             }
         }
 
-        // Mostrar u ocultar el botón Pedir según sea necesario
-        botonPedir.setVisibility(mostrarBoton ? View.VISIBLE : View.GONE);
+        // Mostrar u ocultar el botón add según sea necesario
+        addRacionButton.setVisibility(mostrarBoton ? View.VISIBLE : View.GONE);
     }
 
     private int obtenerCantidadTotal(ArrayList<EncapsuladorEntradas> datos) {
@@ -257,14 +249,14 @@ public class SeleccionarRacionesActivity extends AppCompatActivity {
         }
 
         // Mostrar u ocultar el botón Pedir según sea necesario
-        botonPedir.setVisibility(mostrarBoton ? View.VISIBLE : View.GONE);
+        addRacionButton.setVisibility(mostrarBoton ? View.VISIBLE : View.GONE);
 
         // Actualizar el texto del botón con la cantidad total y el precio total
         if (mostrarBoton) {
             int cantidadTotal = obtenerCantidadTotal(datos);
             double precioTotal = obtenerPrecioTotal(datos);
-            String textoBoton = "Pedir " + cantidadTotal + " por " + String.format("%.2f", precioTotal) + " €";
-            botonPedir.setText(textoBoton);
+            String textoBoton = "Añadir " + cantidadTotal + " por " + String.format("%.2f", precioTotal) + " €";
+            addRacionButton.setText(textoBoton);
         }
     }
     //Obtener lista de detalles

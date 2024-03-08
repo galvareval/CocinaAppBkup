@@ -2,6 +2,7 @@ package vidal.juan.cocinapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.DecimalFormatSymbols;
+
 public class PantallaPrincipalActivity extends AppCompatActivity {
     //Items del xml
     TextView usuarioLogeadoTextView;
@@ -19,7 +22,9 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
-
+        Log.d("ActivityLifecycle", "onCreate() PantallaPrincipal");
+        //ver si usa . o coma todo quitar esto, es una prueba
+        Log.d("getDecimal", "Decimal" +  DecimalFormatSymbols.getInstance().getDecimalSeparator());
         //Ref items del xml
         usuarioLogeadoTextView = findViewById(R.id.usuarioLogeadoTextView);
         editarRegistroButton = findViewById(R.id.editarRegistroButton);
@@ -72,6 +77,11 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("ActivityLifecycle", "onDestroy() Pantalla principal");
+    }
 
     /**
      * Método para pasar a la ventana ver pedidos en estado preparar o recoger
@@ -79,7 +89,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
     private void verPedidos() {
         Intent verPedidosIntent = new Intent(PantallaPrincipalActivity.this, VerPedidoActivity.class);
         startActivity(verPedidosIntent);
-        finish();
+
     }
 
     /**
@@ -88,7 +98,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
     private void hacerPedido() {
         Intent hacerPedidoIntent = new Intent(PantallaPrincipalActivity.this, SeleccionarRacionesActivity.class);
         startActivity(hacerPedidoIntent);
-        finish();
+
     }
 
     /**
@@ -98,6 +108,6 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         //Pasar a la vista de editar registro
         Intent editarRegistroIntent   = new Intent(PantallaPrincipalActivity.this, EditarRegistroActivity.class);
         startActivity(editarRegistroIntent);
-        finish();
+
     }
 }

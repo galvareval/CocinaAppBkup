@@ -91,8 +91,7 @@ public class EditarRegistroActivity extends AppCompatActivity {
      */
 
     private  void volverPprincipal() {
-        Intent intent = new Intent(EditarRegistroActivity.this, PantallaPrincipalActivity.class);
-        startActivity(intent);
+
         finish();
     }
 
@@ -165,7 +164,7 @@ public class EditarRegistroActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 // DATO MODIFICADO EN BBDD
-                Toast.makeText(EditarRegistroActivity.this,"Datos modificados "  , Toast.LENGTH_LONG).show();
+                Toast.makeText(EditarRegistroActivity.this,"Registro modificado "  , Toast.LENGTH_LONG).show();
                 //volver a la ventana principal
                 volverPprincipal();
             }
@@ -228,7 +227,7 @@ public class EditarRegistroActivity extends AppCompatActivity {
      */
     public void obtenerDatosUserLogeado1vez(Query datosUsuarioLogeado) {
 
-        datosUsuarioLogeado.addListenerForSingleValueEvent(new ValueEventListener() {
+        datosUsuarioLogeado.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -241,16 +240,18 @@ public class EditarRegistroActivity extends AppCompatActivity {
                 {
                     //Crear un objeto usuario a partir de los datos filtrados para el correo del usuario logeado
                     Usuarios usuarioDatosAux = userSnapshot.getValue(Usuarios.class);
-                    //Obtener los datos para mostrarlos en la vista
-                    nombreUserOriginal = usuarioDatosAux.getNombre();
-                    apellidosOriginal = usuarioDatosAux.getApellidos();
-                    departamentoOriginal = usuarioDatosAux.getDepartamento();
-                    telefonoOriginal = usuarioDatosAux.getTelefono();
-                    //Pasar los datos origianles a la vista
-                    modNombreEditText.setText(nombreUserOriginal);
-                    modApellidoEditText.setText(apellidosOriginal);
-                    modDepartamentoEditText.setText(departamentoOriginal);
-                    modTelefonoEditText.setText(telefonoOriginal);
+                    if(usuarioDatosAux != null) {
+                        //Obtener los datos para mostrarlos en la vista
+                        nombreUserOriginal = usuarioDatosAux.getNombre();
+                        apellidosOriginal = usuarioDatosAux.getApellidos();
+                        departamentoOriginal = usuarioDatosAux.getDepartamento();
+                        telefonoOriginal = usuarioDatosAux.getTelefono();
+                        //Pasar los datos origianles a la vista
+                        modNombreEditText.setText(nombreUserOriginal);
+                        modApellidoEditText.setText(apellidosOriginal);
+                        modDepartamentoEditText.setText(departamentoOriginal);
+                        modTelefonoEditText.setText(telefonoOriginal);
+                    }
                 }
                 //Funcionalidad de EditText en caso de que los campos sean modiifcados
                 alCambiarTextoCampo(modNombreEditText, nombreUserOriginal );
@@ -292,7 +293,7 @@ public class EditarRegistroActivity extends AppCompatActivity {
         });
     }
 
-    //TODO borrar este método segurmanete no funcione bien
+
     public void verificarModificacionCampo(EditText campoValidar, String campoOriginal)
     {
         //Toast.makeText(EditarRegistroActivity.this,"camp original: " + campoOriginal, Toast.LENGTH_LONG).show();

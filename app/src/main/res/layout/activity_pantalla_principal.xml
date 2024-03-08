@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:textColor="@color/white"
             android:text="@string/editar_registro" />
 
         <Button
@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
+            android:textColor="@color/white"
             android:text="@string/cerrar_sesion" />
 
     </LinearLayout>
@@ -75,6 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="@color/white"
             android:text="@string/nuevo_pedido" />
 
         <Button
@@ -82,12 +84,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="@color/white"
             android:text="@string/pedidos_activos" />
         <Button
             android:id="@+id/verHistoricoButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="@color/white"
             android:text="@string/historio_pedidos" />
 
 
