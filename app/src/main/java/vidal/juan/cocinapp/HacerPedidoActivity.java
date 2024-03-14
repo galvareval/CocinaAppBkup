@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,11 +42,16 @@ public class HacerPedidoActivity extends AppCompatActivity {
     private ArrayList<DetallePedido> detallesSeleccionados;
     private ArrayList<DetallePedidoNoParcel> detallesSeleccionadosNoParcel = new ArrayList<>();//Iincializar el array list para luego hacer la transformación
     private double precioTotal;
-    // Formatear la fecha al formato deseado: aaaa-MM-dd
-    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-    //Formatear para guardar hora minutos y segundos
-    SimpleDateFormat formatoHoraMinSeg = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // Formatear la fecha de entrega
+    //SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");//Asi funcionaba TODO cambiar el formato en el servidor que cambia el estado
+    SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyy");
+    //Formatear para guardar hora minutos y segundos en fecha del peddido
+    //SimpleDateFormat formatoHoraMinSeg = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //Asi funcionaba TODO cambiar el formato en el servidor que cambia el estado
+    SimpleDateFormat formatoHoraMinSeg = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
     static final int apartirDiasRecoger = 4;//Dias a partir de los cuales se puede recoger Dias definidos por esther ? TODO sacar este dato de BBDD?
+    //Para la imagen
+    private final String URL_FOTOS = "https://firebasestorage.googleapis.com/v0/b/cocinaapp-7da53.appspot.com/o/";
+    private final String URL_SUFIJO = "?alt=media";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,12 +88,16 @@ public class HacerPedidoActivity extends AppCompatActivity {
                     TextView cantidadRacionDetalleVistaDetalle = view.findViewById(R.id.cantidadRacionDetalleVistaDetalle);
                     TextView cantidadRacionVistaDetalle = view.findViewById(R.id.cantidadRacionVistaDetalle);
                     TextView precioRacionDetalleVistaDetalle = view.findViewById(R.id.precioRacionDetalleVistaDetalle);
-
+                    ImageView imagenRacion = view.findViewById(R.id.imagenRacion);
                     nombreRacionDetalle.setText(detallePedido.getRacion());
                     cantidadRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getCantidad()));
                     Locale locale = Locale.US;//Para poner el . como serparador
                     precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f",detallePedido.getPrecio() * detallePedido.getCantidad()) + "\u20AC");
-
+                    // Utiliza Glide para cargar la imagen desde la URL
+                    // Utiliza Glide para cargar la imagen desde la URL
+                    Glide.with(HacerPedidoActivity.this)
+                            .load(URL_FOTOS + detallePedido.getRacion() + URL_SUFIJO)
+                            .into(imagenRacion);
 
                 }
             }

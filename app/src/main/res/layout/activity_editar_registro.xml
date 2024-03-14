@@ -1,17 +1,18 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/fondo"
-    android:padding="16dp"
     tools:context=".EditarRegistroActivity">
 
     <ImageView
         android:id="@+id/logoImageViewRegistro"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
         android:src="@drawable/cocin_app_logo" />
 
     <TextView
@@ -20,9 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/logoImageViewRegistro"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-3dp"
+        android:layout_gravity="center"
         android:text="@string/modificar_resitro_string"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="40sp"
         android:fontFamily="@font/niconne"
         android:textStyle="bold"
@@ -32,12 +33,12 @@
         android:id="@+id/modNombreLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cocinAppTextView"
         android:layout_marginTop="16dp"
         android:text="@string/nombre"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:paddingStart="9dp"
         />
 
 
@@ -45,11 +46,14 @@
         android:id="@+id/modNombreEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/modNombreLabel"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:inputType="textMultiLine|text|textCapSentences"
         android:textColor="@color/black"
+        android:background="@color/editTrasparencia"
         android:textSize="18sp"
-        android:textStyle="bold" />
+         />
 
     <TextView
         android:id="@+id/modApellidoLabel"
@@ -58,9 +62,10 @@
         android:layout_below="@+id/modNombreEditText"
         android:layout_marginTop="16dp"
         android:text="@string/apellidos"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:paddingStart="9dp"
         />
 
 
@@ -68,11 +73,14 @@
         android:id="@+id/modApellidoEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/modApellidoLabel"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:inputType="textMultiLine|text|textCapSentences"
         android:textColor="@color/black"
+        android:background="@color/editTrasparencia"
         android:textSize="18sp"
-        android:textStyle="bold" />
+         />
 
     <TextView
         android:id="@+id/modDepartamentoLabel"
@@ -81,19 +89,23 @@
         android:layout_below="@id/modApellidoEditText"
         android:layout_marginTop="16dp"
         android:text="@string/departamento"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="18sp"
+        android:paddingStart="9dp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/modDepartamentoEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/modDepartamentoLabel"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:inputType="textMultiLine|text|textCapSentences"
         android:textColor="@color/black"
+        android:background="@color/editTrasparencia"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        />
 
     <TextView
         android:id="@+id/modTelefonoLabel"
@@ -102,26 +114,29 @@
         android:layout_below="@id/modDepartamentoEditText"
         android:layout_marginTop="16dp"
         android:text="@string/telefono"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="18sp"
+        android:paddingStart="9dp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/modTelefonoEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/modTelefonoLabel"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:inputType="phone"
         android:textColor="@color/black"
+        android:background="@color/editTrasparencia"
         android:textSize="18sp"
-        android:textStyle="bold" />
+         />
 
     <Button
         android:id="@+id/modRegistroButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/modTelefonoEditText"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="190dp"
         android:textColor="@color/white"
         android:text="@string/modificar_registro" />
 
@@ -129,9 +144,8 @@
         android:id="@+id/cancelRegistroButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/modRegistroButton"
         android:layout_marginTop="10dp"
         android:textColor="@color/white"
         android:text="@string/cancelar" />
 
-</RelativeLayout>
+</LinearLayout>

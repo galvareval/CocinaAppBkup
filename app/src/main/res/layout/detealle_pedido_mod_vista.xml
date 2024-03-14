@@ -15,82 +15,105 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:padding="3dp" />
-    <TableLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="*">
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        android:layout_height="119dp"
+        android:background="@drawable/fondo"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/cantidadRacionVistaDetalle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingStart="95dp"
-                android:paddingVertical="5dp"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:text="@string/cantidadRacionDetalle" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/modDetalleBotonQuitar"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/icono_quitar" />
+        <ImageView
+            android:id="@+id/imagenRacion"
+            android:layout_width="140dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher" />
 
-                <TextView
-                    android:id="@+id/cantidadRacionDetalleVistaDetalle"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-                <Button
-                    android:id="@+id/modDetalleBotonAnadir"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/icono_anadir" />
-            </LinearLayout>
-
-
-        </TableRow>
-        <TableRow
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp">
+            android:stretchColumns="*">
 
-            <TextView
-                android:id="@+id/precioRacionVistaDetalle"
+            <TableRow
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingStart="95dp"
-                android:layout_margin="0dp"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:text="@string/precio" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/precioRacionDetalleVistaDetalle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                />
+                <TextView
+                    android:id="@+id/cantidadRacionVistaDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="5dp"
+                    android:paddingStart="15dp"
+                    android:text="@string/cantidadRacionDetalle"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-        </TableRow>
-    </TableLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/modDetalleBotonQuitar"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/icono_quitar" />
+
+                    <TextView
+                        android:id="@+id/cantidadRacionDetalleVistaDetalle"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/modDetalleBotonAnadir"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/icono_anadir" />
+                </LinearLayout>
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp">
+
+                <TextView
+                    android:id="@+id/precioRacionVistaDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:paddingStart="15dp"
+                    android:text="@string/precio"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/precioRacionDetalleVistaDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

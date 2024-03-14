@@ -52,7 +52,7 @@
         android:hint="Comentarios para cocina(opcional)"
         android:ems="10"
         android:gravity="start|top"
-        android:background="@android:color/white"
+        android:background="@color/editTrasparencia"
         android:textColor="@color/black"
         android:textColorHint="@color/hintColor"
         android:inputType="textMultiLine" />

@@ -14,4 +14,6 @@
     <color name="prepararPedidoColor">#F48901</color>
     <color name="defPedidoColor">#F42301</color>
     <color name="hintColor">#42403E</color>
+    <color name="fondo">#DFC371</color>
+    <color name="editTrasparencia">#CCFFFFFF</color>
 </resources>

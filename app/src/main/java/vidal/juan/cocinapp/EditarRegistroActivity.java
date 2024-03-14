@@ -2,6 +2,8 @@ package vidal.juan.cocinapp;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -155,26 +157,50 @@ public class EditarRegistroActivity extends AppCompatActivity {
         if(verfificarEstadoNombre & verfificarEstadoApel & verfificarEstadoDepart & verfificarEstadoTelefono)
         {
             //todo meter ventana de confirmación?¿
-            //obtener idusuario autenticado que coincide con la tabla usuarios
-            String key = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            //Crear objeto del modelo usuario para actulizarlo en la tabla usuarios
-            Usuarios usuarioUpdate = new Usuarios(nombre,apels,usuarioLogeado.getEmail(),departamento,telefono);
-            //Actualizar el registro;listener para saber si ha ido bien
-            myRef.child(key).setValue(usuarioUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // DATO MODIFICADO EN BBDD
-                Toast.makeText(EditarRegistroActivity.this,"Registro modificado "  , Toast.LENGTH_LONG).show();
-                //volver a la ventana principal
-                volverPprincipal();
-            }
-            })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditarRegistroActivity.this,"ERROR no se registraron los cambios "  , Toast.LENGTH_LONG).show();
-                    }
-                });
+            AlertDialog.Builder builder = new AlertDialog.Builder(EditarRegistroActivity.this, R.style.DatePickerTheme);
+            String mensajeConfirmacionMod = "¿Estás seguro de que quieres modificar el registro de usuario?";
+                builder.setMessage(mensajeConfirmacionMod);
+            String finalNombre = nombre;
+            String finalApels = apels;
+            String finalDepartamento = departamento;
+            String finalTelefono = telefono;
+            builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //obtener idusuario autenticado que coincide con la tabla usuarios
+                            String key = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            //Crear objeto del modelo usuario para actulizarlo en la tabla usuarios
+                            Usuarios usuarioUpdate = new Usuarios(finalNombre, finalApels,usuarioLogeado.getEmail(), finalDepartamento, finalTelefono);
+                            //Actualizar el registro;listener para saber si ha ido bien
+                            myRef.child(key).setValue(usuarioUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // DATO MODIFICADO EN BBDD
+                                            Toast.makeText(EditarRegistroActivity.this,"Registro modificado "  , Toast.LENGTH_LONG).show();
+                                            //volver a la ventana principal
+                                            volverPprincipal();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(EditarRegistroActivity.this,"ERROR no se registraron los cambios "  , Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+            // Crea el AlertDialog y lo muestra
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
         }
 
 

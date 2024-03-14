@@ -7,20 +7,14 @@
     android:background="@drawable/fondo"
     tools:context=".SeleccionarRacionesActivity">
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
     <ListView
         android:id="@+id/lista"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
 
         android:descendantFocusability="beforeDescendants"
-        android:divider="@android:color/black"
+        android:divider="@color/principal"
         android:dividerHeight="1dp" />
 
     <!-- LinearLayout que contiene el botón Pedir -->

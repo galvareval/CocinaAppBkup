@@ -11,11 +11,13 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +36,9 @@ public class VerDetallesPedidoActivity extends AppCompatActivity {
     private TextView fechaPedidoDetalleText,fechaEntregaDetalleText,cometariosDetalleText,totalDetalleText,idPedidoTextView,textModPedidoInfo;
     private String idPedido;
     private LinearLayout layoutEditarPedido;
+    //Para la url de la imagen
+    private final String URL_FOTOS = "https://firebasestorage.googleapis.com/v0/b/cocinaapp-7da53.appspot.com/o/";
+    private final String URL_SUFIJO = "?alt=media";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,12 +207,15 @@ public class VerDetallesPedidoActivity extends AppCompatActivity {
                     TextView cantidadRacionDetalleVistaDetalle = view.findViewById(R.id.cantidadRacionDetalleVistaDetalle);
                     TextView cantidadRacionVistaDetalle = view.findViewById(R.id.cantidadRacionVistaDetalle);
                     TextView precioRacionDetalleVistaDetalle = view.findViewById(R.id.precioRacionDetalleVistaDetalle);
-
+                    ImageView imagenRacion = view.findViewById(R.id.imagenRacion);
                     nombreRacionDetalle.setText(detallePedido.getRacion());
                     cantidadRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getCantidad()));
                     Locale locale = Locale.US;//Para poner el . como serparador
                     precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f",detallePedido.getPrecio() * detallePedido.getCantidad()) + "\u20AC");
-
+                    // Utiliza Glide para cargar la imagen desde la URL
+                    Glide.with(VerDetallesPedidoActivity.this)
+                            .load(URL_FOTOS + detallePedido.getRacion() + URL_SUFIJO)
+                            .into(imagenRacion);
 
                 }
             }
