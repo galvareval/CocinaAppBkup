@@ -51,7 +51,7 @@ public class ModificarPedidoActivity extends AppCompatActivity {
     //Formatear para guardar hora minutos y segundos
     SimpleDateFormat formatoHoraMinSeg = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     static final int apartirDiasRecoger = 4;//Dias a partir de los cuales se puede recoger Dias definidos por esther ? TODO sacar este dato de BBDD?
-    private ArrayList<DetallePedido> detallesNuevosAgregados;
+    private ArrayList<DetallePedido> detallesNuevosAgregados,detallesActuales;
     private ArrayList<DetallePedidoNoParcel> detallesNuevosAgregadosNoParcel = null;//Iincializar el array list para luego hacer la transformación
     private double precioTotalDeNuevoAgregado = 0;
 
@@ -104,7 +104,7 @@ public class ModificarPedidoActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // Obtener el ArrayList de detalles seleccionados
-                detallesNuevosAgregados = data.getParcelableArrayListExtra("detallesSeleccionados");
+                detallesNuevosAgregados = data.getParcelableArrayListExtra("detallesAgregados");
                 // Obtener el precio total
                 precioTotalDeNuevoAgregado = data.getDoubleExtra("precioTotal", 0.0);
                 Log.d("detallesNuevos", "detalles nuevos orig."+ detallesNuevosAgregados.toString() + "precio total: " + precioTotalDeNuevoAgregado);
@@ -139,15 +139,26 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                     fechaPedidoDetalleTextMod.setText(pedido.getFecha_pedido().toString());
                     fechaEntregaModTextview.setText( pedido.getFecha_entrega().toString());
                     cometariosDetalleTextMod.setText(pedido.getComentarios().toString());
-                    totalDetalleTextMod.setText(String.valueOf(pedido.getPrecio_total()) + "\u20AC" );
+                    Locale locale = Locale.US;//Para poner el . como serparador
+                    totalDetalleTextMod.setText(String.format(locale,"%.2f", pedido.getPrecio_total()) + "\u20AC");
                     idPedidoModTextView.setText(getString(R.string.idPedidoString) + idPedido.substring(3,7));
-                    //Agregar al objeto pedido el stock,cantidadMax, y precio de la racion en cada detalle del pedido
+
                     //Si existen nuevos pedidos agregarlos al pedido
                     if (detallesNuevosAgregadosNoParcel !=null)
                     {
+                        //Los detalles del pedido pasan a ser los de la lista
+                        pedido.setDetalles(detallesNuevosAgregadosNoParcel);
+                        double precioTotalNuevo = 0;
+                        for (DetallePedidoNoParcel detallesNuevos : pedido.getDetalles()) {
+                            precioTotalNuevo += detallesNuevos.getPrecio() * detallesNuevos.getCantidad();
+                        }
+                        pedido.setPrecio_total(precioTotalNuevo);
+
+                        totalDetalleTextMod.setText(String.format(locale,"%.2f", pedido.getPrecio_total()) + "\u20AC");
+
+                        /*//****
                         // Lista para almacenar los detalles que se van a agregar
                         List<DetallePedidoNoParcel> detallesAgregados = new ArrayList<>();
-
                         for (DetallePedidoNoParcel detalleNuevo : detallesNuevosAgregadosNoParcel) {
                             boolean encontrado = false;
                             for (DetallePedidoNoParcel detalleOriginal : pedido.getDetalles()) {
@@ -161,17 +172,21 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                                 detallesAgregados.add(detalleNuevo);
                                 double precioAnt = pedido.getPrecio_total();
                                 pedido.setPrecio_total(precioAnt + (detalleNuevo.getPrecio()  * detalleNuevo.getCantidad()));
-                                Log.d("detallesNuevos", "Precio total nuevo." + pedido.getPrecio_total());
-                                totalDetalleTextMod.setText(String.valueOf(pedido.getPrecio_total()) + "\u20AC");
+
+                                //Locale locale = Locale.US;//Para poner el . como serparador
+                                totalDetalleTextMod.setText(String.format(locale,"%.2f", pedido.getPrecio_total()) + "\u20AC");
+                                //totalDetalleTextMod.setText(String.valueOf(pedido.getPrecio_total()) + "\u20AC");
                             }
                         }
 
                         // Agregar los detalles de la lista detalles agregados al pedido
-                        pedido.getDetalles().addAll(detallesAgregados);
-
+                        pedido.getDetalles().addAll(detallesAgregados);*/
+                        //Logs
                         Log.d("ModPedidoPed", "Pedido al añdir raciones: "+ pedido.toString());
                         //Log.d("detallesNuevos", "Nuevas Raciones."+ pedido.getDetalles().toString());
+                        //Recorrer los detalles
                     }
+
                     final int[] racionesRecuperadas = {0};
                     for (DetallePedidoNoParcel detalle : pedido.getDetalles()) {
                         //Encontrar la racion en la BBDD para cada detalle
@@ -187,12 +202,15 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                                     detalle.setPrecioRacion(racion.getPrecio());
                                     detalle.setPedidoMaxRacion(String.valueOf(racion.getPedido_max()));
                                     //Si el detalle es agregado hay que recalcular el stock original
+                                    //Los detalles agregados tienen como estock "agregado"
                                         if(detalle.getStockOriginal() != null){
-                                            int cantidadAgregadaRacion = detalle.getCantidad();
-                                            int sotkcBdd = Integer.parseInt(racion.getStock());
-                                            int stockDepuesAgregado = sotkcBdd-cantidadAgregadaRacion;
-                                            detalle.setStockOriginal(String.valueOf(stockDepuesAgregado));
-                                            detalle.setStockRacion(String.valueOf(stockDepuesAgregado));
+                                            if(detalle.getStockOriginal().equals("agregado")){
+                                                int cantidadAgregadaRacion = detalle.getCantidad();
+                                                int sotkcBdd = Integer.parseInt(racion.getStock());
+                                                int stockDepuesAgregado = sotkcBdd-cantidadAgregadaRacion;
+                                                detalle.setStockOriginal(String.valueOf(stockDepuesAgregado));
+                                                detalle.setStockRacion(String.valueOf(stockDepuesAgregado));
+                                            }
                                         }else{
                                             detalle.setStockOriginal(racion.getStock());
                                             detalle.setStockRacion(racion.getStock());
@@ -264,7 +282,7 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                     addRacionButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            seleccionarNuevasRacions();
+                            seleccionarNuevasRacions(pedido.getDetalles());
                         }
                     });
 
@@ -283,18 +301,44 @@ public class ModificarPedidoActivity extends AppCompatActivity {
 
     }
 
-    private void seleccionarNuevasRacions() {
+    /**
+     * Iniciar actividad de seleccionar nuevas raciones
+     */
+    private void seleccionarNuevasRacions(List <DetallePedidoNoParcel> detallesAtualesDelPedido) {
+        //Pasar los de detalles mediante la clase detalles pediddo que implementa parcelable
+        transFormParcel(detallesAtualesDelPedido);
         Intent intentSeleccionarNuevasRaciones = new Intent(ModificarPedidoActivity.this, AgregarRacionesPedido.class);
+        intentSeleccionarNuevasRaciones.putParcelableArrayListExtra("detallesActuales", detallesActuales);
         startActivityForResult(intentSeleccionarNuevasRaciones, REQUEST_CODE);
     }
+
+    /**
+     * Pasar los detalles a la clase que no implementa parcelable para evitar incluir un campo = 0 en la BBDD
+     */
     private void transFormNoParcel() {
         detallesNuevosAgregadosNoParcel = new ArrayList<>();
         for (DetallePedido detalle : detallesNuevosAgregados) {
             //Cada objeto de la lista detallesSeleccionados pasarlo al arraylist DetallePedidoNoParcel exactamente igual a como estaba
-            detallesNuevosAgregadosNoParcel.add(new DetallePedidoNoParcel(detalle.getRacion(), detalle.getCantidad(), detalle.getPrecio()));
+            detallesNuevosAgregadosNoParcel.add(new DetallePedidoNoParcel(detalle.getRacion(), detalle.getCantidad(), detalle.getPrecio(),detalle.getPrecioRacion(),detalle.getPedidoMaxRacion(),detalle.getStockRacion(), detalle.getStockOriginal()));
         }
-        Log.d("Transformación", "detallesNuevosAgregadosNoParcel: " + detallesNuevosAgregadosNoParcel.toString());
+        Log.d("Transformación", "Detalles NoParcel: " + detallesNuevosAgregadosNoParcel.toString());
     }
+
+    /**
+     * Pasar los detalles a la clase que implementa parcelable para poder pasarlos mediante put extra
+     */
+    private void transFormParcel(List <DetallePedidoNoParcel> detallesActualesNoparce) {
+        detallesActuales = new ArrayList<>();
+        for (DetallePedidoNoParcel detalle : detallesActualesNoparce) {
+            //Cada objeto de la lista detallesActualesNoparce pasarlo al arraylist detallesActuales exactamente igual a como estaba
+            //Pasar los datos de lo que hay seleecionado tambien
+            detallesActuales.add (new DetallePedido( detalle.getRacion(),detalle.getCantidad(),detalle.getPrecio(),detalle.getPrecioRacion(),detalle.getPedidoMaxRacion(),detalle.getStockRacion(),detalle.getStockOriginal()));
+            //DetallePedido detaAux = new DetallePedido(detalle.getRacion(),detalle.getCantidad(),detalle.getPrecio(),detalle.getPrecioRacion(),detalle.getPedidoMaxRacion(),detalle.getStockRacion(),detalle.getStockOriginal());
+            //detallesActuales.add(detaAux);
+        }
+        Log.d("Transformación", "Detalles Parcel: " + detallesActuales.toString());
+    }
+
     /**
      * Llenar la lista con los detalles del pedido
      * @param pedido objeto pedido del que se obtienen los detalles
@@ -320,7 +364,8 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                     //Valores inciales de la vista de la lista
                     nombreRacionDetalle.setText(detallePedido.getRacion());
                     cantidadRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getCantidad()));
-                    precioRacionDetalleVistaDetalle.setText(String.valueOf (detallePedido.getPrecio()) + "\u20AC");
+                    Locale locale = Locale.US;//Para poner el . como serparador
+                    precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f",detallePedido.getPrecio() * detallePedido.getCantidad()) + "\u20AC");
                     //Listeners para los botones
                     //Contador
                     final int[] modCantidad = {0};
@@ -336,11 +381,59 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                             double precioUnaracion = Double.parseDouble(detallePedido.getPrecioRacion());
                             int cantidadActual = detallePedido.getCantidad();
                             String cantidadMaxima = detallePedido.getPedidoMaxRacion();
+                            //String cantidadMaxima = String.valueOf(Integer.parseInt(detallePedido.getPedidoMaxRacion()) - cantidadActual);
+
                             //int stock = Integer.parseInt(racion.getStock());
 
-                            Log.d("ExecRaStockAntes+", "Stock antes de hacer click en + " + detallePedido.getRacion() + ": " + detallePedido.getStockRacion());
+                            Log.d("Valores+", "Valores antes del if: Racion " +  detallePedido.getRacion() + "CantidadActual: " + detallePedido.getCantidad() +  ": VarMod: " + modCantidad[0]  +   " CantidadMax: " +  cantidadMaxima + ": StokOrig: " + stockOrig[0] + " StockDim: " +  detallePedido.getStockRacion() ) ;
                             Log.d("ValorModCantidadA", "Valor de mod cantidad Antes de if: " + modCantidad[0] );
-                            if (modCantidad[0] < Math.min(Integer.parseInt(cantidadMaxima), stockOrig[0])) {
+                            //Si la cantidad actual es menor que la cantidad maxima
+                            if(detallePedido.getCantidad() < Integer.parseInt(cantidadMaxima)){
+                                if (modCantidad[0] < stockOrig[0])
+                                {
+                                    //Aumentar las veces que se dio a +
+                                    modCantidad[0] += 1;
+                                    //Modificar el stock
+                                    int stock = Integer.parseInt(detallePedido.getStockRacion());
+                                    //Disminuir 1 de sotck
+                                    detallePedido.setStockRacion(String.valueOf(stock- 1));
+                                    //Aumentar la cantidad en 1 del pedido
+                                    detallePedido.setCantidad(cantidadActual + 1);
+                                    Log.d("ValorModCantidadB", "Valor de mod cantidad depues de if: " + modCantidad[0] );
+                                    Log.d("ExecRaStockdesp+", "Stock despues de hacer click en + " + detallePedido.getRacion() + ": " + detallePedido.getStockRacion());
+                                    //Mostrar la actu en la view
+                                    cantidadRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getCantidad()));
+                                    double nuevoPrecio = Double.parseDouble(detallePedido.getPrecioRacion()) * (detallePedido.getCantidad());
+                                    Log.d("Nuevoprecio", "Nuevo precio:  " + nuevoPrecio);
+                                    //Actualizar el precio del pedido
+                                    //detallePedido.setPrecio(nuevoPrecio); TODO quitar esta linea si funciona ok; el precio no tiene que modificarse en el objeto solo en la vista
+                                    //precioRacionActu[0] = precioUnaracionMas;
+                                    Locale locale = Locale.US;//Para poner el . como serparador
+                                    //Mostrar actu del precio en la view
+                                    precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f", nuevoPrecio) + "\u20AC");
+                                    //precioRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getPrecio()) + "\u20AC"); TODO quitar esto correcion formato
+                                    //Precio total aterior
+                                    double precioAnt;
+                                    //String del precio total actual en la vista general, hayq que quitar el simbolo $ con un substring
+                                    String totalStringAnt = totalDetalleTextMod.getText().toString();
+                                    precioAnt = Double.parseDouble(totalStringAnt.substring(0, totalStringAnt.length() - 1));
+
+                                    totalDetalleTextMod.setText(String.format(locale,"%.2f", precioAnt + precioUnaracion) + "\u20AC");
+                                    //todo quitar Log.e("stockdetalles", "Pulsar boton detalles mod."+ pedido.toString());
+                                }
+                                else{
+                                    if(stockOrig[0] == 0)
+                                        Toast.makeText(ModificarPedidoActivity.this, "No quedan existencias en stock", Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(ModificarPedidoActivity.this, "Se ha alcanzado el límite de productos disponibles en stock", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else
+                            {
+                                Toast.makeText(ModificarPedidoActivity.this, "Se ha alcanzado el máximo de productos de este tipo por pedido", Toast.LENGTH_SHORT).show();
+                            }
+                            //Todo quitar esto; despues de verificar que funciann bien los limites de sotk y max racion
+                            /*if (modCantidad[0] <= Math.min(Integer.parseInt(cantidadMaxima), stockOrig[0])) {
                                 //Aumentar las veces que se dio a +
                                 modCantidad[0] += 1;
                                 //Modificar el stock
@@ -358,25 +451,27 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                                 //Actualizar el precio del pedido
                                 detallePedido.setPrecio(nuevoPrecio);
                                 //precioRacionActu[0] = precioUnaracionMas;
+                                Locale locale = Locale.US;//Para poner el . como serparador
                                 //Mostrar actu del precio en la view
-                                precioRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getPrecio()) + "\u20AC");
+                                precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f", detallePedido.getPrecio()) + "\u20AC");
+                                //precioRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getPrecio()) + "\u20AC"); TODO quitar esto correcion formato
                                 //Precio total aterior
                                 double precioAnt;
                                 //String del precio total actual en la vista general, hayq que quitar el simbolo $ con un substring
                                 String totalStringAnt = totalDetalleTextMod.getText().toString();
                                 precioAnt = Double.parseDouble(totalStringAnt.substring(0, totalStringAnt.length() - 1));
-                                Locale locale = Locale.US;//Para poner el . como serparador
+
                                 totalDetalleTextMod.setText(String.format(locale,"%.2f", precioAnt + precioUnaracion) + "\u20AC");
                                 //todo quitar Log.e("stockdetalles", "Pulsar boton detalles mod."+ pedido.toString());
 
                             } else {
-                                if (modCantidad[0] == Integer.parseInt(cantidadMaxima)) {
+                                if (modCantidad[0] > Integer.parseInt(cantidadMaxima)) {
                                     Toast.makeText(ModificarPedidoActivity.this, "Se ha alcanzado el máximo de productos de este tipo por pedido", Toast.LENGTH_SHORT).show();
 
                                 } else {
                                     Toast.makeText(ModificarPedidoActivity.this, "Se ha alcanzado el límite de productos disponibles en stock", Toast.LENGTH_SHORT).show();
                                 }
-                            }
+                            }*/
                         }
 
                     });
@@ -400,14 +495,18 @@ public class ModificarPedidoActivity extends AppCompatActivity {
                                 //Mostrar la actu en la view
                                 cantidadRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getCantidad()));
                                 //Actualizar el precio del pedido
-                                detallePedido.setPrecio(Double.parseDouble(detallePedido.getPrecioRacion()) * (detallePedido.getCantidad()));
-                                precioRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getPrecio()) + "\u20AC");//Mostrar actu del precio en la view
+                                double nuevoPrecio = Double.parseDouble(detallePedido.getPrecioRacion()) * (detallePedido.getCantidad());
+                                //detallePedido.setPrecio(Double.parseDouble(detallePedido.getPrecioRacion()) * (detallePedido.getCantidad()));
+                                Locale locale = Locale.US;//Para poner el . como serparador
+                                //Mostrar actu del precio en la view
+                                precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f", nuevoPrecio) + "\u20AC");
+                                //precioRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getPrecio()) + "\u20AC"); TODO quitar esto, correcion de formato mostrado
                                 //Precio total anterior original
                                 double precioAnt;
                                 //String del precio total actual en la vista geneeral, hayq que quitar el simbolo $ con un substring
                                 String totalStringAnt = totalDetalleTextMod.getText().toString();
                                 precioAnt = Double.parseDouble(totalStringAnt.substring(0, totalStringAnt.length() - 1));
-                                Locale locale = Locale.US;//Para poner el . como serparador
+
                                 totalDetalleTextMod.setText(String.format(locale,"%.2f", precioAnt - precioUnaracion) + "\u20AC");
 
 
@@ -420,9 +519,6 @@ public class ModificarPedidoActivity extends AppCompatActivity {
         Log.d("ExecTamLista", "tamaño de la lista: " + listaDetalleMod.getAdapter().getCount());
         //((BaseAdapter) listaDetalleMod.getAdapter()).notifyDataSetChanged();
     }
-
-
-
 
     /**
      * Volver Detalles del pedido
@@ -438,10 +534,7 @@ public class ModificarPedidoActivity extends AppCompatActivity {
      * Volver Pantalla principal
      */
     private void volverPprincipal() {
-        /*Intent intentPprincipal = new Intent(ModificarPedidoActivity.this, PantallaPrincipalActivity.class);*/
-
         finish();
-
     }
 
     /**
@@ -515,6 +608,12 @@ public class ModificarPedidoActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Confirmar la modiificacion de pedido, conlleva la actualizacion del stock de la tabla de raciones
+     * @param pedido pedido a modidifcar
+     * @param dataSnapshotPedido referencia a la BBDD del pedido a modificar
+     */
     private void confirmModificarPedido( Pedido pedido,DataSnapshot dataSnapshotPedido) {
         //Actulizar el stock con los nuevos datos
 
@@ -589,6 +688,12 @@ public class ModificarPedidoActivity extends AppCompatActivity {
             });
         }
     }
+
+    /**
+     * Modifiar el pedido en la BBDD; Este metodo se usa en confirmModificarPedido
+     * @param dataSnapshotPedidoActu referencia a la BBDD para modificar el pedido
+     * @param actuPedido el pedido nuevo a updatear en la BBDD
+     */
     private void modificarPedido(DataSnapshot dataSnapshotPedidoActu, Map actuPedido) {
 
         dataSnapshotPedidoActu.getRef().updateChildren(actuPedido).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -608,6 +713,11 @@ public class ModificarPedidoActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Eliminar el pediddo en la BBDD; Este metodo se usa en confirmModificarPedido
+     * @param dataSnapshotEliminar referencia a la BBDD para eliminar el pedido
+     */
 
     private void eliminarPedido(DataSnapshot dataSnapshotEliminar) {
         dataSnapshotEliminar.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {

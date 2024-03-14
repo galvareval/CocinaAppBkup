@@ -13,6 +13,16 @@ public class DetallePedidoNoParcel {
     private String stockRacion;
     private String stockOriginal;
 
+    public DetallePedidoNoParcel(String racion, int cantidad, double precio, String precioRacion, String pedidoMaxRacion, String stockRacion, String stockOriginal) {
+        this.racion = racion;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.precioRacion = precioRacion;
+        this.pedidoMaxRacion = pedidoMaxRacion;
+        this.stockRacion = stockRacion;
+        this.stockOriginal = stockOriginal;
+    }
+
     public DetallePedidoNoParcel(String racion, int cantidad, double precio) {
         this.racion = racion;
         this.cantidad = cantidad;

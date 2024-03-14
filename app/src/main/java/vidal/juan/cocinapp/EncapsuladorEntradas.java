@@ -70,4 +70,17 @@ public class EncapsuladorEntradas {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    @Override
+    public String toString() {
+        return "EncapsuladorEntradas{" +
+                "urlImagen='" + urlImagen + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", precio='" + precio + '\'' +
+                ", cantidadActual=" + cantidadActual +
+                ", cantidadMaxima=" + cantidadMaxima +
+                ", stock=" + stock +
+                '}';
+    }
 }
