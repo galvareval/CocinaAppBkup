@@ -31,6 +31,7 @@ public class AgregarRacionesPedido extends AppCompatActivity {
     private ListView lista;
     private Button addRacionButton,cancelarButton;
     private ArrayList<EncapsuladorEntradas> datos;
+    private ArrayList<DetallePedido> detallesActuales;
     private boolean datosCargados = false;
     private final String URL_FOTOS = "https://firebasestorage.googleapis.com/v0/b/cocinaapp-7da53.appspot.com/o/";
     private final String URL_SUFIJO = "?alt=media";
@@ -47,7 +48,9 @@ public class AgregarRacionesPedido extends AppCompatActivity {
         addRacionButton = findViewById(R.id.botonPedir);
         cancelarButton = findViewById(R.id.cancelarButton);
         datos = new ArrayList<>();
-
+        // Obtener el ArrayList de detalles actuales
+        detallesActuales = getIntent().getParcelableArrayListExtra("detallesActuales");
+        Log.d("DetallesActuales", "Los detalles que ya estan el la vista de modificar pedido: " + detallesActuales.toString());
         // Cargar datos desde Firebase
         cargarDatosFirebase();
 
@@ -59,12 +62,14 @@ public class AgregarRacionesPedido extends AppCompatActivity {
                 int cantidadTotal = obtenerCantidadTotal(datos);
                 double precioTotal = obtenerPrecioTotal(datos);
                 // Llamada al método para obtener los detalles seleccionados
-                ArrayList<DetallePedido> detallesSeleccionados = obtenerDetallesSeleccionados();
+                ArrayList<DetallePedido> detallesSeleccionadosAgregados = obtenerDetallesSeleccionados();
                 //Comprobar que se seleeciona algo para pasar a la siguiente activity
-                if (!detallesSeleccionados.isEmpty()) {
+                if (!detallesSeleccionadosAgregados.isEmpty()) {
+                    detallesActuales.addAll(detallesSeleccionadosAgregados);
+                    Log.d("DetallesActuales", "resultado suma detalles actuales + nuevos: " + detallesActuales.toString());
                     //Devolver detales seleccionados a actividad anteriror
                     Intent intent = new Intent();
-                    intent.putParcelableArrayListExtra("detallesSeleccionados", detallesSeleccionados);
+                    intent.putParcelableArrayListExtra("detallesAgregados", detallesActuales);
                     intent.putExtra("precioTotal", precioTotal);
                     setResult(RESULT_OK, intent);
                     finish();
@@ -75,7 +80,6 @@ public class AgregarRacionesPedido extends AppCompatActivity {
         cancelarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 finish();
             }
         });
@@ -94,29 +98,49 @@ public class AgregarRacionesPedido extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    datos = new ArrayList<>();
                     for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                         String tituloEntrada = childSnapshot.getKey();
                         String descripcion = childSnapshot.child("descripcion").getValue(String.class);
                         Long pedidoMax = childSnapshot.child("pedido_max").getValue(Long.class);
                         String precioPrev = childSnapshot.child("precio").getValue(String.class);
+                        //Tratar los decimales del precio
                         // Crea una instancia de DecimalFormat con el formato deseado
-                        Log.d("getDecimalPrecio", "Decimal y precio de bbdd" +  DecimalFormatSymbols.getInstance().getDecimalSeparator() + "precio:  " + precioPrev);
+                        Log.d("getDecimalPrecio", "Decimal y precio de bbdd" + DecimalFormatSymbols.getInstance().getDecimalSeparator() + "precio:  " + precioPrev);
                         Locale locale = Locale.getDefault();
                         Log.d("Locale", "Idioma: " + locale.getLanguage() + ", País: " + locale.getCountry());
-
                         double precioDecimal = Double.parseDouble(precioPrev);
-                        Log.d("getDecimalPrecio", "Precio decimal" +  precioDecimal);
+                        Log.d("getDecimalPrecio", "Precio decimal" + precioDecimal);
                         // Crear DecimalFormatSymbols con el punto como separador decimal
                         DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
                         symbols.setDecimalSeparator('.');
-                        DecimalFormat df = new DecimalFormat("#.00",symbols);
+                        DecimalFormat df = new DecimalFormat("#.00", symbols);
                         String precio = df.format(precioDecimal);
-                        Log.d("getDecimalPrecio", "Precio decimal depues del format" +  precio);
+                        Log.d("getDecimalPrecio", "Precio decimal depues del format" + precio);
+
                         String stock = childSnapshot.child("stock").getValue(String.class);
                         String urlImagen = URL_FOTOS + childSnapshot.child("foto").getValue(String.class) + URL_SUFIJO;
-                        Log.d("Firebase", "Descripción: " + descripcion + ", Precio: " + precio + ", Pedido Máximo: " + pedidoMax + ", Stock: " + stock);
+                        Log.d("DatosRacion", "Racion: " + tituloEntrada);
+                        //Añadir a datos solo las raciones que no existan como detalles actuales
+                        // Verificar si la racion ya está en detallesActuales
+                        boolean detalleExistente = false;
+                        if (detallesActuales != null){
+                            for (DetallePedido detalleActual : detallesActuales) {
+                                if (detalleActual.getRacion().equals(tituloEntrada)) {
+                                detalleExistente = true;
+                                break;
+                             }
+                            }
+                            // Si la no está en detallesActuales, agregarlo a la lista datos
+                            if (!detalleExistente) {
+                                Log.d("DatosRacion", "Racion gregarda : " + tituloEntrada);
+                                ///Evitar crasheo al agregar mal raciones en la BBBDD
+                                if (urlImagen != null && tituloEntrada != null && descripcion != null && precio != null && pedidoMax != null && stock != null) {
+                                    datos.add(new EncapsuladorEntradas(urlImagen, tituloEntrada, descripcion, precio, Long.valueOf(pedidoMax).intValue(), Long.valueOf(stock).intValue()));
+                                }
 
-                        datos.add(new EncapsuladorEntradas(urlImagen, tituloEntrada, descripcion, precio, Long.valueOf(pedidoMax).intValue(), Long.valueOf(stock).intValue()));
+                            }
+                        }
                     }
 
                     // Inicializa tu adaptador después de que se hayan cargado los datos
@@ -266,7 +290,7 @@ public class AgregarRacionesPedido extends AppCompatActivity {
             addRacionButton.setText(textoBoton);
         }
     }
-    //Obtener lista de detalles
+    //Obtener lista de detalles seleccionados nuevos
     private ArrayList<DetallePedido> obtenerDetallesSeleccionados() {
         ArrayList<DetallePedido> detallesSeleccionados = new ArrayList<>();
 
@@ -278,8 +302,9 @@ public class AgregarRacionesPedido extends AppCompatActivity {
                 DetallePedido detalle = new DetallePedido(
                         entrada.get_textoTitulo(),
                         cantidadActual,
-                        Double.parseDouble(entrada.get_Precio())
+                        Double.parseDouble(entrada.get_Precio()),null,null,null,"agregado"
                 );
+                Log.d("detallesNuevos", "detalleAgregado a al lista en Agregarraciones"+ detalle.toString() );
                 detallesSeleccionados.add(detalle);
             }
         }

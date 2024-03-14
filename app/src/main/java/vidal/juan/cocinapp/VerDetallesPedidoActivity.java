@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class VerDetallesPedidoActivity extends AppCompatActivity {
 
@@ -162,7 +163,9 @@ public class VerDetallesPedidoActivity extends AppCompatActivity {
                         fechaPedidoDetalleText.setText(pedido.getFecha_pedido().toString());
                         fechaEntregaDetalleText.setText(pedido.getFecha_entrega().toString());
                         cometariosDetalleText.setText(pedido.getComentarios().toString());
-                        totalDetalleText.setText(String.valueOf(pedido.getPrecio_total()) + "\u20AC");
+                        Locale locale = Locale.US;//Para poner el . como serparador
+                        totalDetalleText.setText(String.format(locale,"%.2f",pedido.getPrecio_total()) + "\u20AC");
+                        //totalDetalleText.setText(String.valueOf(pedido.getPrecio_total()) + "\u20AC"); todo quitar esto
                         idPedidoTextView.setText(getString(R.string.idPedidoString) + idPedido.substring(3, 7));
                         //Controlar editar el peddio en funcion de si el pedido es editable
                         //Cambiar color y la visibilidad en funcion del estado
@@ -202,7 +205,8 @@ public class VerDetallesPedidoActivity extends AppCompatActivity {
 
                     nombreRacionDetalle.setText(detallePedido.getRacion());
                     cantidadRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getCantidad()));
-                    precioRacionDetalleVistaDetalle.setText(String.valueOf (detallePedido.getPrecio()) + "\u20AC");
+                    Locale locale = Locale.US;//Para poner el . como serparador
+                    precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f",detallePedido.getPrecio() * detallePedido.getCantidad()) + "\u20AC");
 
 
                 }

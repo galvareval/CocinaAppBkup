@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class HacerPedidoActivity extends AppCompatActivity {
 
@@ -83,14 +84,16 @@ public class HacerPedidoActivity extends AppCompatActivity {
 
                     nombreRacionDetalle.setText(detallePedido.getRacion());
                     cantidadRacionDetalleVistaDetalle.setText(String.valueOf(detallePedido.getCantidad()));
-                    precioRacionDetalleVistaDetalle.setText(String.valueOf (detallePedido.getPrecio()) + "\u20AC");
+                    Locale locale = Locale.US;//Para poner el . como serparador
+                    precioRacionDetalleVistaDetalle.setText(String.format(locale,"%.2f",detallePedido.getPrecio() * detallePedido.getCantidad()) + "\u20AC");
 
 
                 }
             }
         });
         //Mostrar el total del pedido; obtenido de la activdad anterior
-        total.setText("Total: " + String.valueOf(precioTotal) + "\u20AC");//Todo formatear mejor esto, redondearlo
+        Locale locale = Locale.US;//Para poner el . como serparador
+        total.setText("Total: " + String.format(locale,"%.2f",precioTotal) + "\u20AC");
 
         //Evento Botón Seleccionar fecha de entrga
         seleccionarFechaEntregaButton.setOnClickListener(new View.OnClickListener() {
@@ -229,7 +232,7 @@ public class HacerPedidoActivity extends AppCompatActivity {
             //Pasar los detalles a un objeto que no implemente parcelable para que no inserte stability 0 en firebase
             transFormNoParcel();
             //Crear el bojeto pedido con los datos;El estado predeterminado al hacer un pedido es : Preparar
-            Pedido nuevoPedido = new Pedido(comentarios,detallesSeleccionadosNoParcel,"preparar",fechaPedido,fechaEntrega,precioTotal,userId);
+            Pedido nuevoPedido = new Pedido(comentarios,detallesSeleccionadosNoParcel,"preparar",fechaPedido,fechaEntrega,Math.round(precioTotal * 100.0) / 100.0,userId);
             //Log para ver pedido
             Log.d("NuevoPedido", "Pedido: " + nuevoPedido.toString());
             // Insertar el nuevo pedido en la colección de pedidos verificando si ha ido bien o no
