@@ -6,11 +6,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.text.DecimalFormatSymbols;
 
@@ -18,6 +25,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
     //Items del xml
     TextView usuarioLogeadoTextView;
     Button editarRegistroButton, cerrarSesionButton, hacerPedidoButton,verPedidosButton,verHistoricoButton;
+    private FirebaseUser usuarioLogeado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +41,14 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         verPedidosButton = findViewById(R.id.verPedidosButton);
         verHistoricoButton = findViewById(R.id.verHistoricoButton);
         //FIREBASE; usuario logeado
-        FirebaseUser usuarioLogeado = FirebaseAuth.getInstance().getCurrentUser();
+        usuarioLogeado = FirebaseAuth.getInstance().getCurrentUser();
         // Obtener el mail del usario logeado, todo Cambiar por el nombre de usuario con un bienvenidos?
         /*if (usuarioLogeado != null ){
             usuarioLogeadoTextView.setText("Bienvenido " + "/n" + usuarioLogeado.getEmail());
         }*/
 
         //Accion del boton prueba para editar el registro
+        tokenAppp();
         editarRegistroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,6 +118,32 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         Intent editarRegistroIntent   = new Intent(PantallaPrincipalActivity.this, EditarRegistroActivity.class);
         startActivity(editarRegistroIntent);
 
+    }
+
+    /**
+     * Recuperar el token y asignarlo al usuario
+     */
+    private void tokenAppp (){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("ErrorTokenNotificacion", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        // referencia de la base de datos
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                        if (usuarioLogeado != null){
+                            String userLog = usuarioLogeado.getUid();
+                            DatabaseReference usuariosRef = databaseReference.child("usuarios").child(userLog);
+                            // token del usuario a BBDD
+                            usuariosRef.child("tokenNoti").setValue(token);
+                        }
+                    }
+                });
     }
 
 }

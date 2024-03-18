@@ -68,5 +68,6 @@
     <string name="addAlPedido">Agregar al pedido</string>
     <string name="editarDetalles">+ Editar Detalles</string>
     <string name="editarDetallesMenos">- Editar Detalles</string>
+    <string name="msgtoken">FCM Registration Token: %s</string>
 
 </resources>

@@ -7,6 +7,7 @@ public class Usuarios {
     private String email;
     private String departamento;
     private String telefono;
+    private String tokenNoti;
 
     public Usuarios() {
     }
@@ -57,6 +58,14 @@ public class Usuarios {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getTokenNoti() {
+        return tokenNoti;
+    }
+
+    public void setTokenNoti(String tokenNoti) {
+        this.tokenNoti = tokenNoti;
     }
 }
 

@@ -1,7 +1,11 @@
 package vidal.juan.cocinapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -9,14 +13,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
     //Para hacer la autentificación
@@ -25,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
     Button loginButton;
     EditText usuarioEditText,contrasenaEditText;
     TextView olvidoContrasenaTextView, registroTextView;
+    // Declare the launcher at the top of your Activity/Fragment:
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                } else {
+                    // TODO: Inform user that that your app will not show notifications.
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(usuarioYaLogeadoInt);
             finish();
         }
+        //Preguntar por la notificacion, en andorid 13+ es obligatorio
+        askNotificationPermission();
+
         //Obtener instancia de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
@@ -80,6 +101,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    //Pregunta por notificaciones Andorid 13+
+
+    private void askNotificationPermission() {
+        // Esto es necesario solo para API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, "android.permission.REQUEST_NOTIFICATIONS") ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // FCM SDK (y tu aplicación) pueden enviar notificaciones.
+            } else if (shouldShowRequestPermissionRationale("android.permission.REQUEST_NOTIFICATIONS")) {
+                // TODO: Mostrar una IU educativa explicando al usuario las características que se habilitarán
+                //       mediante la concesión del permiso REQUEST_NOTIFICATIONS. Esta IU debería proporcionar al usuario
+                //       botones "Aceptar" y "No gracias". Si el usuario selecciona "Aceptar", solicite directamente el permiso.
+                //       Si el usuario selecciona "No gracias", permita que el usuario continúe sin notificaciones.
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Esta aplicación necesita el permiso para enviar notificaciones con el fin de proporcionarte actualizaciones importantes y notificaciones relevantes")
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Aquí podrías solicitar directamente el permiso
+                                requestPermissionLauncher.launch("android.permission.REQUEST_NOTIFICATIONS");
+                            }
+                        })
+                        .setNegativeButton("No gracias", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Aquí podrías permitir que el usuario continúe sin notificaciones
+                            }
+                        });
+                // Mostrar el diálogo
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                // Solicitar directamente el permiso
+                requestPermissionLauncher.launch("android.permission.REQUEST_NOTIFICATIONS");
+            }
+        }
+    }
+
 
     /**
      * Validar que el usuario introducido sea un correo electrónico y que la contraseña no esté vacía
@@ -137,4 +194,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
