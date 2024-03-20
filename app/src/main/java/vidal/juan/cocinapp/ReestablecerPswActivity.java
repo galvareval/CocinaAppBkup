@@ -20,6 +20,11 @@ public class ReestablecerPswActivity extends AppCompatActivity {
     Button resetPswButton;
     EditText usuarioEditText;
     @Override
+    public void onBackPressed() {
+
+        finish();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reestablecer_psw);

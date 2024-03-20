@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,11 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +39,7 @@ import java.util.Map;
 
 public class ModificarPedidoActivity extends AppCompatActivity {
 
-    private Button volverDetallesPedidosButton,confirmModPedidoButton,seleccionarFechaEntregaButton,addRacionButton;
+    private Button cancelarModButton,confirmModPedidoButton,seleccionarFechaEntregaButton,addRacionButton;
     private ListView listaDetalleMod = null;
     private TextView fechaPedidoDetalleTextMod,fechaEntregaModTextview,totalDetalleTextMod,idPedidoModTextView,modDEtallesTextView;
     private EditText cometariosDetalleTextMod;
@@ -66,12 +62,17 @@ public class ModificarPedidoActivity extends AppCompatActivity {
     private double precioTotalDeNuevoAgregado = 0;
 
     @Override
+    public void onBackPressed() {
+
+        volverDetallePedido();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_pedido);
         Log.d("ActivityLifecycle", "onCreate() ModificarPedido");
         //referencia a items xml
-        volverDetallesPedidosButton = findViewById(R.id.volverDetallesPedidosButton);
+        cancelarModButton = findViewById(R.id.cancelarModButton);
         confirmModPedidoButton = findViewById(R.id.confirmModPedidoButton);
         addRacionButton = findViewById(R.id.addRacionButton);
         seleccionarFechaEntregaButton = findViewById(R.id.seleccionarFechaEntregaButton);
@@ -86,10 +87,10 @@ public class ModificarPedidoActivity extends AppCompatActivity {
 
         //Funcionalidad botones
         //Volver a la pantalla principal
-        volverDetallesPedidosButton.setOnClickListener(new View.OnClickListener() {
+        cancelarModButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                volverDetallePedido();
+                cancelarMod();
 
             }
         });
@@ -577,6 +578,15 @@ public class ModificarPedidoActivity extends AppCompatActivity {
         startActivity(intentDetallesPedido);
         finish();
 
+    }
+
+    /**
+     * Cancelar modificacion volviendoa lista de pedidos
+     */
+    private void cancelarMod(){
+        Intent intent = new Intent(ModificarPedidoActivity.this, VerPedidoActivity.class);
+        startActivity(intent);
+        finish();
     }
     /**
      * Volver Pantalla principal

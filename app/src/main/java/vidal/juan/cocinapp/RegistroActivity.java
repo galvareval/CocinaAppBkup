@@ -49,6 +49,11 @@ public class RegistroActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://cocinaapp-7da53-default-rtdb.europe-west1.firebasedatabase.app/");
     DatabaseReference myRef = database.getReference("usuarios");
+    @Override
+    public void onBackPressed() {
+
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -299,8 +304,7 @@ public class RegistroActivity extends AppCompatActivity {
                                                     FirebaseAuth.getInstance().signOut();
 
                                                     // Redirigir al usuario a la MainActivity
-                                                    Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
-                                                    startActivity(intent);
+
                                                     finish();
                                                 } else {
                                                     Toast.makeText(RegistroActivity.this, "No se pudo enviar el correo de confirmación. Por favor, inténtelo de nuevo más tarde.", Toast.LENGTH_SHORT).show();

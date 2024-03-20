@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linarLayoutDetallePedido"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
+    android:background="@drawable/fondo_grad"
     android:orientation="vertical">
     <TextView
         android:id="@+id/textViewIdPedido"
@@ -21,7 +22,6 @@
         <TableRow
             android:id="@+id/filaPedidoColor"
             android:layout_width="match_parent"
-            android:background="@color/defPedidoColor"
             android:layout_height="wrap_content">
 
             <TextView
@@ -60,7 +60,6 @@
     <TextView
         android:id="@+id/textViewComentarios"
         android:layout_width="match_parent"
-        android:background="@color/defPedidoColor"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:textColor="@color/black"

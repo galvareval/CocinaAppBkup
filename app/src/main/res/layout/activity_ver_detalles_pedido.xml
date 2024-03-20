@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo"
+    android:background="@drawable/fondo_rep"
     tools:context=".VerDetallesPedidoActivity">
     <TextView
         android:id="@+id/detallestituloTextView"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:background="@drawable/fondo"
+        android:background="@drawable/fondo_rep"
         android:descendantFocusability="beforeDescendants"
         android:divider="@android:color/black"
         android:dividerHeight="0dp" />
@@ -171,6 +171,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:text="@string/volver"
         />

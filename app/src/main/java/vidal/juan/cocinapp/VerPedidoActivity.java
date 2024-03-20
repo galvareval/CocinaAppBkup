@@ -81,11 +81,15 @@ public class VerPedidoActivity extends AppCompatActivity {
 
                 // Cambiar color en función del estado
                 if (pedidoActivo.getEstado().equals("preparar")) {
-                    filaPedidoColor.setBackgroundColor(getResources().getColor(R.color.prepararPedidoColor));
-                    textViewComentarios.setBackgroundColor(getResources().getColor(R.color.prepararPedidoColor));
+                    int drawableResourceId = getResources().getIdentifier("preparar_borde", "drawable", getPackageName());
+                    //filaPedidoColor.setBackgroundColor(getResources().getColor(R.color.prepararPedidoColor));
+                    //textViewComentarios.setBackgroundColor(getResources().getColor(R.color.prepararPedidoColor));
+                    textViewIdPedido.setBackgroundResource(drawableResourceId);
                 } else if (pedidoActivo.getEstado().equals("recoger")) {
-                    filaPedidoColor.setBackgroundColor(getResources().getColor(R.color.recogerPedidoColor));
-                    textViewComentarios.setBackgroundColor(getResources().getColor(R.color.recogerPedidoColor));
+                    //filaPedidoColor.setBackgroundColor(getResources().getColor(R.color.recogerPedidoColor));
+                    //textViewComentarios.setBackgroundColor(getResources().getColor(R.color.recogerPedidoColor));
+                    int drawableResourceId = getResources().getIdentifier("recoger_borde", "drawable", getPackageName());
+                    textViewIdPedido.setBackgroundResource(drawableResourceId);
                 } else {
                     filaPedidoColor.setBackgroundColor(getResources().getColor(R.color.defPedidoColor));
                     textViewComentarios.setBackgroundColor(getResources().getColor(R.color.defPedidoColor));

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo"
+    android:background="@drawable/fondo_rep"
     tools:context=".SeleccionarRacionesActivity">
 
     <ListView
@@ -15,7 +15,7 @@
 
         android:descendantFocusability="beforeDescendants"
         android:divider="@color/principal"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="0dp" />
 
     <!-- LinearLayout que contiene el botón Pedir -->
     <LinearLayout
@@ -36,6 +36,7 @@
         android:id="@+id/cancelarButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="@string/cancelar"
         android:textColor="@color/white"
          />

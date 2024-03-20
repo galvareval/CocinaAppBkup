@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo"
+    android:background="@drawable/fondo_rep"
     tools:context=".VerPedidoActivity">
     <TextView
         android:id="@+id/confirmarPedidoTextView"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:background="@drawable/fondo"
+        android:background="@drawable/fondo_rep"
         android:descendantFocusability="beforeDescendants"
 
         android:dividerHeight="20dp" />
@@ -67,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:text="@string/volver"/>
 </LinearLayout>

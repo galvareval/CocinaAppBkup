@@ -41,6 +41,12 @@ public class VerDetallesPedidoActivity extends AppCompatActivity {
     private final String URL_SUFIJO = "?alt=media";
 
     @Override
+    public void onBackPressed() {
+
+        volverPedidos();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("ActivityLifecycle", "onCreate() VerDetalles");

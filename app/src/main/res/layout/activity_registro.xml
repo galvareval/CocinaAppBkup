@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo"
+    android:background="@drawable/fondo_rep"
     android:padding="16dp"
     tools:context=".RegistroActivity">
 
@@ -193,6 +193,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/repetirContrasenaEditText"
             android:layout_marginTop="16dp"
+            android:textColor="@color/white"
             android:text="@string/registrarse" />
 
     </RelativeLayout>

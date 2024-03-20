@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo"
+    android:background="@drawable/fondo_rep"
     tools:context=".ModificarPedidoActivity">
     <TextView
         android:id="@+id/detallesModtituloTextView"
@@ -178,12 +178,12 @@
         android:text="@string/modPedido"
         />
     <Button
-        android:id="@+id/volverDetallesPedidosButton"
+        android:id="@+id/cancelarModButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@color/white"
-        android:text="@string/volver"
+        android:text="@string/cancelar"
         />
 
 

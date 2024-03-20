@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="119dp"
         android:gravity="center"
-        android:background="@drawable/fondo"
+        android:background="@drawable/fondo_grad"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/imagenRacion"

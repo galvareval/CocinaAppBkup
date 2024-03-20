@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo"
+    android:background="@drawable/fondo_rep"
     tools:context=".EditarRegistroActivity">
 
     <ImageView
@@ -144,7 +144,8 @@
         android:id="@+id/cancelRegistroButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="100dp"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:text="@string/cancelar" />
 

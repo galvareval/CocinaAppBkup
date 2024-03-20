@@ -19,7 +19,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="119dp"
-        android:background="@drawable/fondo"
+        android:background="@drawable/fondo_grad"
         android:gravity="center"
         android:orientation="horizontal">
 
